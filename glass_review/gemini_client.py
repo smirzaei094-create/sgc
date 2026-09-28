@@ -87,7 +87,7 @@ def _call_with_model_fallback(model_candidates: list[str], call_fn):
         try:
             return with_rate_limit_retry(call_fn)(model)
         except genai_errors.ClientError as exc:
-            if _is_daily_quota_error(exc):
+                        if _is_daily_quota_error(exc) or getattr(exc, "code", None) == 404:
                 last_exc = exc
                 continue
             raise
